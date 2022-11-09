@@ -22,7 +22,6 @@ class Slider {
     private _elements: Node[];
     private _currentElements: Node[]=[];
     public constructor(node: HTMLElement){
-        this._containerNode = node;
         this._elements=[];
         while(node.firstChild){
             if(node.firstChild.textContent?.trim()!='')
@@ -30,8 +29,13 @@ class Slider {
             node.removeChild(node.firstChild);
         }
 
-       console.log(this._elements)
-       this.BeginIdleAnimation();
+        this._containerNode = document.createElement('div');
+        this._containerNode.classList.add('sliderinnernode');
+        this.ChangeSpeedValues(this._changeTime,this._startEndTime);
+        this.setAnimation(AnimationState.IdleAnimation);
+        node.appendChild(this._containerNode);
+
+        this.BeginIdleAnimation();
     }
 
     private BeginIdleAnimation(){
@@ -67,28 +71,44 @@ class Slider {
         while(this._containerNode.firstChild)
                 this._containerNode.removeChild(this._containerNode.firstChild)
         this._containerNode.append(...this._currentElements)
-        console.log(this._currentElements)
     }
 
     async Slide(direction: 1|-1){
         if(this._currentAnimation != AnimationState.IdleAnimation)
             return;
 
+        this._containerNode.style.setProperty("--animation-direction",direction.toString());
+
         this._currentAnimationDirection=direction;
-        this._currentAnimation=AnimationState.EndAnimation;
+        this.setAnimation(AnimationState.EndAnimation);
         await Slider.waitForSeconds(this._startEndTime);
         
         this.RestartIdleAnimation();
         this.NextElements(direction);
-        this._currentAnimation=AnimationState.StartAnimation;
+        this.setAnimation(AnimationState.StartAnimation);
 
         //await  maybe we can set a wait time in the middle of the end-start 
         //of the animation :D
 
         await Slider.waitForSeconds(this._startEndTime);
 
-        this._currentAnimation=AnimationState.IdleAnimation;
+        this.setAnimation(AnimationState.IdleAnimation);
     }
+
+    public ChangeSpeedValues(changeTime:number, startEndAnimationTime: number){
+        this._changeTime = changeTime;
+        this._startEndTime = startEndAnimationTime;
+        this._containerNode.style.setProperty("--animation-time",changeTime.toString()+'s');
+        this._containerNode.style.setProperty("--end-animation-time",startEndAnimationTime.toString()+'s');
+    }
+    public setAnimation(animation: AnimationState){
+        if (!this._containerNode.classList.replace(this._currentAnimation,animation))
+            this._containerNode.classList.add(animation);
+        
+        this._currentAnimation = animation;
+        console.log(this._currentAnimation)
+    }
+
 
     private static waitForSeconds(seconds: number){
         return new Promise(
