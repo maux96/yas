@@ -21,13 +21,17 @@ class Slider {
     
     private _elements: Node[];
     private _currentElements: Node[]=[];
-    public constructor(node: HTMLElement){
+    public constructor(node: HTMLElement, amountOfElements: number | null){
         this._elements=[];
         while(node.firstChild){
             if(node.firstChild.textContent?.trim()!='')
                 this._elements.push(node.firstChild);
             node.removeChild(node.firstChild);
         }
+
+        if (amountOfElements!=null)
+            this.SetAmountOfElements(amountOfElements)
+
 
         this._containerNode = document.createElement('div');
         this._containerNode.classList.add('sliderinnernode');
@@ -36,6 +40,7 @@ class Slider {
         node.appendChild(this._containerNode);
 
         this.BeginIdleAnimation();
+        this.Slide(1);
     }
 
     private BeginIdleAnimation(){
@@ -101,12 +106,16 @@ class Slider {
         this._containerNode.style.setProperty("--animation-time",changeTime.toString()+'s');
         this._containerNode.style.setProperty("--end-animation-time",startEndAnimationTime.toString()+'s');
     }
+
+    public SetAmountOfElements(amount: number){
+        this._size=amount;
+    }
+
     public setAnimation(animation: AnimationState){
         if (!this._containerNode.classList.replace(this._currentAnimation,animation))
             this._containerNode.classList.add(animation);
         
         this._currentAnimation = animation;
-        console.log(this._currentAnimation)
     }
 
 
