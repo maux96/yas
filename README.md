@@ -1,8 +1,6 @@
 # Yet Another Slider (yas)
 
-Very simple slider, easy to configure, may have HTMLElements as Elements.
-
-
+Very simple slider written in TypeScript, easy to set up, it can have HTMLElements as items.
 
 ---
 ## Use 
@@ -33,7 +31,8 @@ You can download the project in the workspace and:
 ``` 
 The slider will have by default the elements that the node with `id` equal (in this case) to `slider_id` has as children.
 
-The slider may be created using `AddYasToHTMLElement`, passing directly the container Node.
+The slider can be created using `AddYasToHTMLElement`, passing directly the container Node.
+
 
 ---
 ## Actions
@@ -48,6 +47,7 @@ Action | Desctiption
 ---
 ## Configuration
 
+### Method Chaining
 ```js
 let slider = AddYasToID('slider_id')
                 .ChangeSpeedValues(10,0.5)
@@ -55,14 +55,29 @@ let slider = AddYasToID('slider_id')
                 .SlowMovementOffset(100px);
 
 ```
-You can _join_ the configurations when you create the slider using `AddYasToID(id:string)`, `AddYasToHTMLElement(node:HTMLElement)` or initializing like `new Slider(node:HTMLElement)` 
+You can _join_ the configurations chaining the methods when you create the slider using `AddYasToID()`, `AddYasToHTMLElement()` or initializing like `new YaSlider()` 
+  #### Available configurations
 
-### Available configurations
+
+  Configuration | Description  
+  --- | --- | 
+  `SetSpeedValues(changeTime, endTime)`  | Sets the animation time, `changeTime` is the delay in seconds waited for change, and `endTime` is  the delay of the change animation.
+  `SetAmountOfElements(amount)` |   Sets the number of items displayed at once.
+  `SetSlowMovementOffset(offset)` | Sets the distance traveled by the elements after make a change, Ej: `'100px'`. 
+  `RemoveAutoAnimation()` | Remove auto change. 
+
+### Configuration object 
+You can configure the slider using a configuration object, using the methods `AddYasToID()` and `AddYasToHTMLElement()` 
+```js
+let slider=AddYasToID('slider_id',{
+    amountElements:2,
+    changeTime:5,
+    startEndAnimationTime:0.5,
+    initialAnimationDirection: 1,
+    autoAnimation: true,
+    slowMovementOffset: "80px"
+})
+```
 
 
-Configuration | Description  
---- | --- | 
-`SetSpeedValues(changeTime, endTime)`  | Sets the animation time, `changeTime` is the delay in seconds waited for change, and `endTime` is  the delay of the change animation.
-`SetAmountOfElements(amount)` |   Sets the number of items displayed at once.
-`SetSlowMovementOffset(offset)` | Sets the distance traveled by the elements after make a change, Ej: `'100px'`. 
-`RemoveAutoAnimation()` | Remove auto change. 
+

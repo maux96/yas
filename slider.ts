@@ -23,7 +23,7 @@ export interface YasConfigChanger {
 }
 
 
-class Slider {
+class YaSlider {
     private _containerNode: HTMLElement;
     
     private _currentAnimationDirection: 1 | -1 = 1;
@@ -72,7 +72,7 @@ class Slider {
     }
 
     public BeginIdleAnimation(){
-        let self: Slider = this;
+        let self: YaSlider = this;
 
         self._config.autoAnimation=true;
         this._intervalAnimationId = setInterval(function(){
@@ -116,7 +116,7 @@ class Slider {
 
         this._currentAnimationDirection=direction;
         this.setAnimation(AnimationState.EndAnimation);
-        await Slider.waitForSeconds(this._config.startEndAnimationTime);
+        await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
         
         if(this._config.autoAnimation)
             this.RestartIdleAnimation();
@@ -126,7 +126,7 @@ class Slider {
         //await  maybe we can set a wait time in the middle of the end-start 
         //of the animation :D
 
-        await Slider.waitForSeconds(this._config.startEndAnimationTime);
+        await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
 
         this.setAnimation(AnimationState.IdleAnimation);
     }
@@ -197,7 +197,7 @@ class Slider {
     }
 }
 
-const AddYasToID = (id: string,config: YasConfigChanger | undefined = undefined):Slider | null => {
+const AddYasToID = (id: string,config: YasConfigChanger | undefined = undefined):YaSlider | null => {
     const node = document.getElementById(id);
     if (node === null){
         console.error(`Node with id ${id} not found!`)
@@ -206,8 +206,8 @@ const AddYasToID = (id: string,config: YasConfigChanger | undefined = undefined)
     return AddYasToHTMLElement(node, config);
 }
 
-const AddYasToHTMLElement = (node: HTMLElement, config: YasConfigChanger | undefined = undefined):Slider => {
-    return new Slider(node, config);
+const AddYasToHTMLElement = (node: HTMLElement, config: YasConfigChanger | undefined = undefined):YaSlider => {
+    return new YaSlider(node, config);
 }
 
 
@@ -215,5 +215,5 @@ const AddYasToHTMLElement = (node: HTMLElement, config: YasConfigChanger | undef
 export {
     AddYasToID,
     AddYasToHTMLElement,
-    Slider
+    YaSlider
 }

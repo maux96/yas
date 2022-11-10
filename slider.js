@@ -4,7 +4,7 @@ var AnimationState;
     AnimationState["StartAnimation"] = "start-animation";
     AnimationState["EndAnimation"] = "end-animation";
 })(AnimationState || (AnimationState = {}));
-class Slider {
+class YaSlider {
     _containerNode;
     _currentAnimationDirection = 1;
     _current = 0;
@@ -73,14 +73,14 @@ class Slider {
         this._containerNode.style.setProperty("--animation-direction", direction.toString());
         this._currentAnimationDirection = direction;
         this.setAnimation(AnimationState.EndAnimation);
-        await Slider.waitForSeconds(this._config.startEndAnimationTime);
+        await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
         if (this._config.autoAnimation)
             this.RestartIdleAnimation();
         this.NextElements(direction);
         this.setAnimation(AnimationState.StartAnimation);
         //await  maybe we can set a wait time in the middle of the end-start 
         //of the animation :D
-        await Slider.waitForSeconds(this._config.startEndAnimationTime);
+        await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
         this.setAnimation(AnimationState.IdleAnimation);
     }
     SlideRight() {
@@ -146,6 +146,6 @@ const AddYasToID = (id, config = undefined) => {
     return AddYasToHTMLElement(node, config);
 };
 const AddYasToHTMLElement = (node, config = undefined) => {
-    return new Slider(node, config);
+    return new YaSlider(node, config);
 };
-export { AddYasToID, AddYasToHTMLElement, Slider };
+export { AddYasToID, AddYasToHTMLElement, YaSlider };
