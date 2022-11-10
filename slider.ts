@@ -32,7 +32,7 @@ class Slider {
 
         this._containerNode = document.createElement('div');
         this._containerNode.classList.add('sliderinnernode');
-        this.ChangeSpeedValues(this._changeTime,this._startEndTime);
+        this.SetSpeedValues(this._changeTime,this._startEndTime);
         this.setAnimation(AnimationState.IdleAnimation);
         node.appendChild(this._containerNode);
 
@@ -109,7 +109,7 @@ class Slider {
         this.Slide(-1);
     }
 
-    public ChangeSpeedValues(changeTime:number, startEndAnimationTime: number){
+    public SetSpeedValues(changeTime:number, startEndAnimationTime: number){
         this._changeTime = changeTime;
         this._startEndTime = startEndAnimationTime;
         this._containerNode.style.setProperty("--animation-time",changeTime.toString()+'s');

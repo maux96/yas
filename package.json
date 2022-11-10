@@ -10,7 +10,7 @@
     "url": "git+https://github.com/maux96/yas.git"
   },
   "author": "Mauricio Mahmud",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/maux96/yas/issues"
   },
