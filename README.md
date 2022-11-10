@@ -11,6 +11,8 @@ The center idea is that the slider will be inserted in a `HTMLElement` node sele
 ### Without a package manager
 You can download the project in the workspace and:
 ```html
+<link rel="stylesheet" href="yas/style.css">
+
 <div id="slider_id">
     <div> first child </div>
     <div> second child </div>
