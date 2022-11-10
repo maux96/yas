@@ -25,7 +25,7 @@ class Slider {
     public constructor(node: HTMLElement){
         this._elements=[];
         while(node.firstChild){
-            if(node.firstChild.textContent?.trim()!='')
+            if(node.firstChild.nodeType == Node.ELEMENT_NODE)
                 this._elements.push(node.firstChild);
             node.removeChild(node.firstChild);
         }
@@ -36,12 +36,16 @@ class Slider {
         this.setAnimation(AnimationState.IdleAnimation);
         node.appendChild(this._containerNode);
 
+
+        this.SlowMovementOffset("100px");
         this.BeginIdleAnimation();
         this.Slide(1);
     }
 
-    private BeginIdleAnimation(){
+    public BeginIdleAnimation(){
         let self: Slider = this;
+
+        self._autoAnimation=true;
         this._intervalAnimationId = setInterval(function(){
             self.Slide(self._currentAnimationDirection);
         }, this._changeTime*1000);
@@ -119,9 +123,25 @@ class Slider {
     }
     public RemoveAutoAnimation(){
         clearInterval(this._intervalAnimationId)
+        this.SlowMovementOffset("0px")
         this._autoAnimation = false;
         return this;
     }
+    public ToogleAutoAnimation(){
+        if(this._autoAnimation)
+            this.RemoveAutoAnimation();
+        else{ 
+            this.SlowMovementOffset("100px");
+            this.Slide(this._currentAnimationDirection);
+            this.BeginIdleAnimation();
+        }
+    }
+
+    public SlowMovementOffset(offset: string){
+        this._containerNode.style.setProperty("--animation-offset",offset);
+        return this;
+    }
+
 
     public SetSpecificAnimation(){
     /* Set an specific animation.  */

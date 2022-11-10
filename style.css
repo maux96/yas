@@ -16,26 +16,26 @@
 @keyframes slider-idleanimation {
     
     from{
-        transform: translate( calc( 5vw * var( --animation-direction ) ) );
+        transform: translate( calc( var( --animation-offset ) * var( --animation-direction ) ) );
     }
     to{
-        transform: translate( calc( -5vw * var( --animation-direction ) ) );
+        transform: translate( calc( -1 * var( --animation-offset ) * var( --animation-direction ) ) );
     }
 }
 @keyframes slider-endanimation {
     from {
-        transform: translate( calc( 5vw * var( --animation-direction ) ) );
+        transform: translate( calc( -1 * var( --animation-offset ) * var( --animation-direction ) ) );
     }
     to {
-        transform: translate( calc( -100vw * var( --animation-direction ) ) );  
+        transform: translate( calc( -100% * var( --animation-direction ) ) );  
     }
 }
 @keyframes slider-startanimation {
     from {
-        transform: translate( calc( 100vw * var( --animation-direction ) ) );  
+        transform: translate( calc( 100% * var( --animation-direction ) ) );  
     }
     to {
-        transform: translate( calc( 5vw * var( --animation-direction ) ) );
+        transform: translate( calc( var( --animation-offset ) * var( --animation-direction ) ) );
 
     }
 }
