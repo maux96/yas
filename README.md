@@ -15,8 +15,10 @@ You can download the project in the workspace and:
     <div> first child </div>
     <div> second child </div>
     <div> 
+        <p> child with an image </p>
         <img src="./testImg.jpg" /> 
     </div>
+</div>
 <button onclick="mySlider.SlideLeft()">Prev</button>
 <button onclick="mySlider.SlideRight()">Next</button>
 
