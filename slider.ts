@@ -5,13 +5,21 @@ enum AnimationState {
     EndAnimation="end-animation"
 }
 
-interface SliderConfig{
+export interface YasConfig{
     changeTime: number,
     startEndAnimationTime: number,
     initialAnimationDirection: 1 | -1,
     amountElements: number,
     autoAnimation: boolean,
     slowMovementOffset: string
+}
+export interface YasConfigChanger {
+    changeTime?: number,
+    startEndAnimationTime?: number,
+    initialAnimationDirection?: 1 | -1,
+    amountElements?: number,
+    autoAnimation?: boolean,
+    slowMovementOffset?: string
 }
 
 
@@ -26,7 +34,7 @@ class Slider {
     private _elements: Node[];
     private _currentElements: Node[]=[];
 
-    private _config: SliderConfig = {
+    private _config: YasConfig = {
         amountElements:2,
         changeTime:5,
         startEndAnimationTime:0.5,
@@ -35,7 +43,7 @@ class Slider {
         slowMovementOffset: "80px"
     }; 
 
-    public constructor(node: HTMLElement, config: SliderConfig | undefined = undefined){
+    public constructor(node: HTMLElement, config: YasConfigChanger | undefined = undefined){
 
         this._config = {...this._config, ...config};
          
@@ -189,7 +197,7 @@ class Slider {
     }
 }
 
-const AddYasToID = (id: string,config: SliderConfig | undefined = undefined):Slider | null => {
+const AddYasToID = (id: string,config: YasConfigChanger | undefined = undefined):Slider | null => {
     const node = document.getElementById(id);
     if (node === null){
         console.error(`Node with id ${id} not found!`)
@@ -198,7 +206,7 @@ const AddYasToID = (id: string,config: SliderConfig | undefined = undefined):Sli
     return AddYasToHTMLElement(node, config);
 }
 
-const AddYasToHTMLElement = (node: HTMLElement, config: SliderConfig | undefined = undefined):Slider => {
+const AddYasToHTMLElement = (node: HTMLElement, config: YasConfigChanger | undefined = undefined):Slider => {
     return new Slider(node, config);
 }
 
