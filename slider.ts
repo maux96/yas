@@ -74,11 +74,11 @@ class Slider {
         );
 
         while(this._containerNode.firstChild)
-                this._containerNode.removeChild(this._containerNode.firstChild)
+            this._containerNode.removeChild(this._containerNode.firstChild)
         this._containerNode.append(...this._currentElements)
     }
 
-    async Slide(direction: 1|-1){
+    public async Slide(direction: 1|-1){
         if(this._currentAnimation != AnimationState.IdleAnimation)
             return;
 
@@ -100,18 +100,28 @@ class Slider {
         this.setAnimation(AnimationState.IdleAnimation);
     }
 
+    public SlideRight(){
+        this.Slide(1);
+    }
+    public SlideLeft(){
+        this.Slide(-1);
+    }
+
     public ChangeSpeedValues(changeTime:number, startEndAnimationTime: number){
         this._changeTime = changeTime;
         this._startEndTime = startEndAnimationTime;
         this._containerNode.style.setProperty("--animation-time",changeTime.toString()+'s');
         this._containerNode.style.setProperty("--end-animation-time",startEndAnimationTime.toString()+'s');
+
+        return this;
     }
 
     public SetAmountOfElements(amount: number){
         this._size=amount;
+        return this; 
     }
 
-    public setAnimation(animation: AnimationState){
+    private setAnimation(animation: AnimationState){
         if (!this._containerNode.classList.replace(this._currentAnimation,animation))
             this._containerNode.classList.add(animation);
         
@@ -124,4 +134,25 @@ class Slider {
             (resolve)=>setTimeout(resolve,seconds*1000)
         );
     }
+}
+
+const AddYasToID = (id: string, amountElements: number=2):Slider | null => {
+    const node = document.getElementById(id);
+    if (node === null){
+        console.error(`Node with id ${id} not found!`)
+        return null
+    }
+    return AddYasToHTMLElement(node,amountElements);
+}
+
+const AddYasToHTMLElement = (node: HTMLElement, amountElements: number=2 ) => {
+    return new Slider(node,amountElements);
+}
+
+
+
+export {
+    AddYasToID,
+    AddYasToHTMLElement,
+    Slider
 }

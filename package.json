@@ -1,0 +1,18 @@
+{
+  "name": "yas",
+  "version": "0.0.1",
+  "description": "Yet Another Slider",
+  "main": "slider.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maux96/yas.git"
+  },
+  "author": "Mauricio Mahmud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maux96/yas/issues"
+  },
+  "homepage": "https://github.com/maux96/yas#readme"
+}

@@ -4,7 +4,7 @@
     place-content: space-around;
 }
 .idle-animation{
-animation: slider-idleanimation var(--animation-time) linear;
+	animation: slider-idleanimation var(--animation-time) linear;
 }
 .end-animation{
     animation: slider-endanimation var(--end-animation-time) ease;
