@@ -33,6 +33,7 @@ The slider will have by default the elements that the node with `id` equal (in t
 
 The slider can be created using `AddYasToHTMLElement`, passing directly the container Node.
 
+Remember to import the CSS code (`yas/style.css`).
 
 ---
 ## Actions
