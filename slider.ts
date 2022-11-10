@@ -18,20 +18,17 @@ class Slider {
     private _currentAnimation: AnimationState=AnimationState.IdleAnimation;
     
     private _intervalAnimationId: number=-1;
+    private _autoAnimation: boolean=true;
     
     private _elements: Node[];
     private _currentElements: Node[]=[];
-    public constructor(node: HTMLElement, amountOfElements: number | null){
+    public constructor(node: HTMLElement){
         this._elements=[];
         while(node.firstChild){
             if(node.firstChild.textContent?.trim()!='')
                 this._elements.push(node.firstChild);
             node.removeChild(node.firstChild);
         }
-
-        if (amountOfElements!=null)
-            this.SetAmountOfElements(amountOfElements)
-
 
         this._containerNode = document.createElement('div');
         this._containerNode.classList.add('sliderinnernode');
@@ -88,7 +85,8 @@ class Slider {
         this.setAnimation(AnimationState.EndAnimation);
         await Slider.waitForSeconds(this._startEndTime);
         
-        this.RestartIdleAnimation();
+        if(this._autoAnimation)
+            this.RestartIdleAnimation();
         this.NextElements(direction);
         this.setAnimation(AnimationState.StartAnimation);
 
@@ -115,10 +113,20 @@ class Slider {
 
         return this;
     }
-
     public SetAmountOfElements(amount: number){
         this._size=amount;
         return this; 
+    }
+    public RemoveAutoAnimation(){
+        clearInterval(this._intervalAnimationId)
+        this._autoAnimation = false;
+        return this;
+    }
+
+    public SetSpecificAnimation(){
+    /* Set an specific animation.  */
+        throw "NotImplemented!";
+        return this;
     }
 
     private setAnimation(animation: AnimationState){
@@ -136,17 +144,17 @@ class Slider {
     }
 }
 
-const AddYasToID = (id: string, amountElements: number=2):Slider | null => {
+const AddYasToID = (id: string):Slider | null => {
     const node = document.getElementById(id);
     if (node === null){
         console.error(`Node with id ${id} not found!`)
         return null
     }
-    return AddYasToHTMLElement(node,amountElements);
+    return AddYasToHTMLElement(node);
 }
 
-const AddYasToHTMLElement = (node: HTMLElement, amountElements: number=2 ) => {
-    return new Slider(node,amountElements);
+const AddYasToHTMLElement = (node: HTMLElement):Slider => {
+    return new Slider(node);
 }
 
 
