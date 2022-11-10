@@ -10,7 +10,7 @@ The center idea is that the slider will be inserted in a `HTMLElement` node sele
 ### Without a package manager
 You can download the project in the workspace and:
 ```html
-<link rel="stylesheet" href="yaSlider/style.css">
+<link rel="stylesheet" href="yas/style.css">
 
 <div id="slider_id">
     <div> first child </div>
@@ -25,7 +25,7 @@ You can download the project in the workspace and:
 
 
 <script type="module">
-    import { AddYasToID } from './yaSlider/slider.js'
+    import { AddYasToID } from './yas/slider.js'
 
     window.mySlider = AddYasToID('slider_id');
 </script>
@@ -34,18 +34,18 @@ The slider will have by default the elements that the node with `id` equal (in t
 
 The slider can be created using `AddYasToHTMLElement`, passing directly the container Node.
 
-Remember to import the CSS code (`yaSlider/style.css`).
+Remember to import the CSS code (`yas/style.css`).
 
 ### With NPM
 ```bash
-npm install yaSlider
+npm install yaslider
 ```
 then
 ```js
 import { 
     AddYasToID,
     AddYasToHTMLElement,
-    YaSlider } from 'yaSlider/slider'
+    YaSlider } from 'yaslider/slider'
 
 ```
 
