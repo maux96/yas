@@ -1,10 +1,9 @@
 {
   "name": "yas",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Yet Another Slider",
   "main": "slider.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maux96/yas.git"
