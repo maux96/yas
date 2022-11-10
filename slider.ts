@@ -5,24 +5,42 @@ enum AnimationState {
     EndAnimation="end-animation"
 }
 
+interface SliderConfig{
+    changeTime: number,
+    startEndAnimationTime: number,
+    initialAnimationDirection: 1 | -1,
+    amountElements: number,
+    autoAnimation: boolean,
+    slowMovementOffset: string
+}
+
 
 class Slider {
-    private _size: number=2;
-    private _changeTime: number=5;
-    private _startEndTime: number=1;
     private _containerNode: HTMLElement;
     
     private _currentAnimationDirection: 1 | -1 = 1;
-    
     private _current: number=0;
     private _currentAnimation: AnimationState=AnimationState.IdleAnimation;
-    
     private _intervalAnimationId: number=-1;
-    private _autoAnimation: boolean=true;
     
     private _elements: Node[];
     private _currentElements: Node[]=[];
-    public constructor(node: HTMLElement){
+
+    private _config: SliderConfig = {
+        amountElements:2,
+        changeTime:5,
+        startEndAnimationTime:0.5,
+        initialAnimationDirection: 1,
+        autoAnimation: true,
+        slowMovementOffset: "80px"
+    }; 
+
+    public constructor(node: HTMLElement, config: SliderConfig | undefined = undefined){
+
+        this._config = {...this._config, ...config};
+         
+
+        //save the children as elements of the slider
         this._elements=[];
         while(node.firstChild){
             if(node.firstChild.nodeType == Node.ELEMENT_NODE)
@@ -30,25 +48,28 @@ class Slider {
             node.removeChild(node.firstChild);
         }
 
+        // Creating the internal "<div>" that will contain the elements.
         this._containerNode = document.createElement('div');
         this._containerNode.classList.add('sliderinnernode');
-        this.SetSpeedValues(this._changeTime,this._startEndTime);
-        this.setAnimation(AnimationState.IdleAnimation);
         node.appendChild(this._containerNode);
 
+        // refreshing de css var values...
+        this.SetSpeedValues(this._config.changeTime,this._config.startEndAnimationTime);
+        this.setAnimation(AnimationState.IdleAnimation);
+        this.setSlowMovementOffset(this._config.slowMovementOffset);
 
-        this.SlowMovementOffset("100px");
         this.BeginIdleAnimation();
-        this.Slide(1);
+        this._current=this._elements.length;
+        this.Slide(this._config.initialAnimationDirection)
     }
 
     public BeginIdleAnimation(){
         let self: Slider = this;
 
-        self._autoAnimation=true;
+        self._config.autoAnimation=true;
         this._intervalAnimationId = setInterval(function(){
             self.Slide(self._currentAnimationDirection);
-        }, this._changeTime*1000);
+        }, this._config.changeTime*1000);
     }
     private RestartIdleAnimation(){
         clearInterval(this._intervalAnimationId);
@@ -57,19 +78,19 @@ class Slider {
 
     private NextElements(direction: number){
         if(direction>0)
-            this._current= this._current + this._size >= this._elements.length 
-                            ? 0 : this._current + this._size;
+            this._current= this._current + this._config.amountElements >= this._elements.length 
+                            ? 0 : this._current + this._config.amountElements;
         else 
-            this._current= this._current - this._size < 0 
+            this._current= this._current - this._config.amountElements < 0 
                             ? this._elements.length -
-                            (this._size - (this._elements.length % this._size))
+                            (this._config.amountElements - (this._elements.length % this._config.amountElements))
                             :
-                            this._current - this._size ;
+                            this._current - this._config.amountElements ;
 
         this._currentElements = this._elements.slice(
             this._current,
             Math.min(
-                this._current+this._size,
+                this._current+this._config.amountElements,
                 this._elements.length
             )
         );
@@ -87,9 +108,9 @@ class Slider {
 
         this._currentAnimationDirection=direction;
         this.setAnimation(AnimationState.EndAnimation);
-        await Slider.waitForSeconds(this._startEndTime);
+        await Slider.waitForSeconds(this._config.startEndAnimationTime);
         
-        if(this._autoAnimation)
+        if(this._config.autoAnimation)
             this.RestartIdleAnimation();
         this.NextElements(direction);
         this.setAnimation(AnimationState.StartAnimation);
@@ -97,7 +118,7 @@ class Slider {
         //await  maybe we can set a wait time in the middle of the end-start 
         //of the animation :D
 
-        await Slider.waitForSeconds(this._startEndTime);
+        await Slider.waitForSeconds(this._config.startEndAnimationTime);
 
         this.setAnimation(AnimationState.IdleAnimation);
     }
@@ -110,36 +131,40 @@ class Slider {
     }
 
     public SetSpeedValues(changeTime:number, startEndAnimationTime: number){
-        this._changeTime = changeTime;
-        this._startEndTime = startEndAnimationTime;
+        this._config.changeTime = changeTime;
+        this._config.startEndAnimationTime = startEndAnimationTime;
         this._containerNode.style.setProperty("--animation-time",changeTime.toString()+'s');
         this._containerNode.style.setProperty("--end-animation-time",startEndAnimationTime.toString()+'s');
 
         return this;
     }
     public SetAmountOfElements(amount: number){
-        this._size=amount;
+        this._config.amountElements=amount;
         return this; 
     }
     public RemoveAutoAnimation(){
         clearInterval(this._intervalAnimationId)
-        this.SlowMovementOffset("0px")
-        this._autoAnimation = false;
+        this.setSlowMovementOffset("0px")
+        this._config.autoAnimation = false;
         return this;
     }
     public ToogleAutoAnimation(){
-        if(this._autoAnimation)
+        if(this._config.autoAnimation)
             this.RemoveAutoAnimation();
         else{ 
-            this.SlowMovementOffset("100px");
+            this.setSlowMovementOffset(this._config.slowMovementOffset);
             this.Slide(this._currentAnimationDirection);
             this.BeginIdleAnimation();
         }
     }
 
-    public SlowMovementOffset(offset: string){
-        this._containerNode.style.setProperty("--animation-offset",offset);
+    public SetSlowMovementOffset(offset: string){
+        this._config.slowMovementOffset = offset;
+        this.setSlowMovementOffset(offset)
         return this;
+    }
+    private setSlowMovementOffset(offset: string){
+        this._containerNode.style.setProperty("--animation-offset",offset);
     }
 
 
@@ -164,17 +189,17 @@ class Slider {
     }
 }
 
-const AddYasToID = (id: string):Slider | null => {
+const AddYasToID = (id: string,config: SliderConfig | undefined = undefined):Slider | null => {
     const node = document.getElementById(id);
     if (node === null){
         console.error(`Node with id ${id} not found!`)
         return null
     }
-    return AddYasToHTMLElement(node);
+    return AddYasToHTMLElement(node, config);
 }
 
-const AddYasToHTMLElement = (node: HTMLElement):Slider => {
-    return new Slider(node);
+const AddYasToHTMLElement = (node: HTMLElement, config: SliderConfig | undefined = undefined):Slider => {
+    return new Slider(node, config);
 }
 
 
