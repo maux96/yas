@@ -13,5 +13,10 @@
   "bugs": {
     "url": "https://github.com/maux96/yas/issues"
   },
-  "homepage": "https://github.com/maux96/yas#readme"
+  "homepage": "https://github.com/maux96/yas#readme",
+  "keywords": [
+    "slider",
+    "frontend",
+    "javascript"
+  ] 
 }
