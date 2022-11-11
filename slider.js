@@ -1,4 +1,4 @@
-var AnimationState;
+export var AnimationState;
 (function (AnimationState) {
     AnimationState["IdleAnimation"] = "idle-animation";
     AnimationState["StartAnimation"] = "start-animation";
@@ -54,14 +54,15 @@ class YaSlider {
     }
     NextElements(direction) {
         if (direction > 0)
-            this._current = this._current + this._config.amountElements >= this._elements.length
-                ? 0 : this._current + this._config.amountElements;
+            this._current = (this._current + this._config.amountElements
+                >= this._elements.length) ? 0 : this._current + this._config.amountElements;
         else
             this._current = this._current - this._config.amountElements < 0
                 ? this._elements.length -
-                    (this._config.amountElements - (this._elements.length % this._config.amountElements))
-                :
-                    this._current - this._config.amountElements;
+                    (this._config.amountElements -
+                        (this._elements.length %
+                            this._config.amountElements))
+                : this._current - this._config.amountElements;
         this._currentElements = this._elements.slice(this._current, Math.min(this._current + this._config.amountElements, this._elements.length));
         while (this._containerNode.firstChild)
             this._containerNode.removeChild(this._containerNode.firstChild);
@@ -124,13 +125,14 @@ class YaSlider {
         this._containerNode.style.setProperty("--animation-offset", offset);
     }
     SetSpecificAnimation() {
-        /* Set an specific animation.  */
+        /* Set a specific animation.  */
         throw "NotImplemented!";
         return this;
     }
     setAnimation(animation) {
-        if (!this._containerNode.classList.replace(this._currentAnimation, animation))
+        if (!this._containerNode.classList.replace(this._currentAnimation, animation)) {
             this._containerNode.classList.add(animation);
+        }
         this._currentAnimation = animation;
     }
     static waitForSeconds(seconds) {
@@ -145,7 +147,5 @@ const AddYasToID = (id, config = undefined) => {
     }
     return AddYasToHTMLElement(node, config);
 };
-const AddYasToHTMLElement = (node, config = undefined) => {
-    return new YaSlider(node, config);
-};
+const AddYasToHTMLElement = (node, config = undefined) => new YaSlider(node, config);
 export { AddYasToID, AddYasToHTMLElement, YaSlider };

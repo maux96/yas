@@ -1,27 +1,11 @@
 
-enum AnimationState {
+import type { YasConfig, YasConfigChanger } from './types'
+
+export enum AnimationState {
     IdleAnimation="idle-animation",
     StartAnimation="start-animation",
     EndAnimation="end-animation"
 }
-
-export interface YasConfig{
-    changeTime: number,
-    startEndAnimationTime: number,
-    initialAnimationDirection: 1 | -1,
-    amountElements: number,
-    autoAnimation: boolean,
-    slowMovementOffset: string
-}
-export interface YasConfigChanger {
-    changeTime?: number,
-    startEndAnimationTime?: number,
-    initialAnimationDirection?: 1 | -1,
-    amountElements?: number,
-    autoAnimation?: boolean,
-    slowMovementOffset?: string
-}
-
 
 class YaSlider {
     private _containerNode: HTMLElement;
@@ -43,7 +27,10 @@ class YaSlider {
         slowMovementOffset: "80px"
     }; 
 
-    public constructor(node: HTMLElement, config: YasConfigChanger | undefined = undefined){
+    public constructor(
+        node: HTMLElement,
+        config: YasConfigChanger | undefined = undefined
+    ){
 
         this._config = {...this._config, ...config};
          
@@ -62,7 +49,9 @@ class YaSlider {
         node.appendChild(this._containerNode);
 
         // refreshing de css var values...
-        this.SetSpeedValues(this._config.changeTime,this._config.startEndAnimationTime);
+        this.SetSpeedValues(
+            this._config.changeTime,this._config.startEndAnimationTime
+        );
         this.setAnimation(AnimationState.IdleAnimation);
         this.setSlowMovementOffset(this._config.slowMovementOffset);
 
@@ -86,14 +75,17 @@ class YaSlider {
 
     private NextElements(direction: number){
         if(direction>0)
-            this._current= this._current + this._config.amountElements >= this._elements.length 
-                            ? 0 : this._current + this._config.amountElements;
+            this._current= (
+                this._current + this._config.amountElements 
+                >= this._elements.length 
+                ) ? 0 : this._current + this._config.amountElements;
         else 
             this._current= this._current - this._config.amountElements < 0 
                             ? this._elements.length -
-                            (this._config.amountElements - (this._elements.length % this._config.amountElements))
-                            :
-                            this._current - this._config.amountElements ;
+                            (this._config.amountElements -
+                            (this._elements.length %
+                            this._config.amountElements))
+                            : this._current - this._config.amountElements ;
 
         this._currentElements = this._elements.slice(
             this._current,
@@ -112,7 +104,9 @@ class YaSlider {
         if(this._currentAnimation != AnimationState.IdleAnimation)
             return;
 
-        this._containerNode.style.setProperty("--animation-direction",direction.toString());
+        this._containerNode.style.setProperty(
+            "--animation-direction",direction.toString()
+        );
 
         this._currentAnimationDirection=direction;
         this.setAnimation(AnimationState.EndAnimation);
@@ -141,8 +135,12 @@ class YaSlider {
     public SetSpeedValues(changeTime:number, startEndAnimationTime: number){
         this._config.changeTime = changeTime;
         this._config.startEndAnimationTime = startEndAnimationTime;
-        this._containerNode.style.setProperty("--animation-time",changeTime.toString()+'s');
-        this._containerNode.style.setProperty("--end-animation-time",startEndAnimationTime.toString()+'s');
+        this._containerNode.style.setProperty(
+            "--animation-time",changeTime.toString()+'s'
+        );
+        this._containerNode.style.setProperty(
+            "--end-animation-time",startEndAnimationTime.toString()+'s'
+        );
 
         return this;
     }
@@ -177,14 +175,15 @@ class YaSlider {
 
 
     public SetSpecificAnimation(){
-    /* Set an specific animation.  */
+    /* Set a specific animation.  */
         throw "NotImplemented!";
         return this;
     }
 
     private setAnimation(animation: AnimationState){
-        if (!this._containerNode.classList.replace(this._currentAnimation,animation))
-            this._containerNode.classList.add(animation);
+        if (!this._containerNode.classList.replace(
+                this._currentAnimation,animation
+        )){ this._containerNode.classList.add(animation); }
         
         this._currentAnimation = animation;
     }
@@ -197,7 +196,11 @@ class YaSlider {
     }
 }
 
-const AddYasToID = (id: string,config: YasConfigChanger | undefined = undefined):YaSlider | null => {
+const AddYasToID = (
+    id: string,
+    config: YasConfigChanger | undefined = undefined
+):YaSlider | null => {
+
     const node = document.getElementById(id);
     if (node === null){
         console.error(`Node with id ${id} not found!`)
@@ -206,9 +209,11 @@ const AddYasToID = (id: string,config: YasConfigChanger | undefined = undefined)
     return AddYasToHTMLElement(node, config);
 }
 
-const AddYasToHTMLElement = (node: HTMLElement, config: YasConfigChanger | undefined = undefined):YaSlider => {
-    return new YaSlider(node, config);
-}
+const AddYasToHTMLElement = (
+    node: HTMLElement,
+    config: YasConfigChanger | undefined = undefined
+):YaSlider => new YaSlider(node, config);
+
 
 
 
