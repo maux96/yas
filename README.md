@@ -85,7 +85,7 @@ You can _join_ the configurations chaining the methods when you create the slide
   `SetSpecificAnimation(animation)` | Sets a different animation.
 
   We create some defaults animations like:
-  `default`, `blur` and `rotation`, but the user can create their own animations following the structure defined by the animations in `./style.css`.
+  `default`, `opacity`, `up-down`,`blur` and `rotation`, but the user can create their own animations following the structure defined by the animations in `./style.css`.
 
 ### Configuration object 
 You can configure the slider using a configuration object, using the methods `AddYasToID()` and `AddYasToHTMLElement()` 
