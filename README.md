@@ -68,7 +68,8 @@ Action | Desctiption
 let slider = AddYasToID('slider_id')
                 .ChangeSpeedValues(10,0.5)
                 .SetAmountOfElements(2)
-                .SlowMovementOffset(100px);
+                .SlowMovementOffset(100px)
+                .SetSpecificAnimation("blur");
 
 ```
 You can _join_ the configurations chaining the methods when you create the slider using `AddYasToID()`, `AddYasToHTMLElement()` or initializing like `new YaSlider()` 
@@ -81,17 +82,22 @@ You can _join_ the configurations chaining the methods when you create the slide
   `SetAmountOfElements(amount)` |   Sets the number of items displayed at once.
   `SetSlowMovementOffset(offset)` | Sets the distance traveled by the elements after make a change, Ej: `'100px'`. 
   `RemoveAutoAnimation()` | Remove auto change. 
+  `SetSpecificAnimation(animation)` | Sets a different animation.
+
+  We create some defaults animations like:
+  `default`, `blur` and `rotation`, but the user can create their own animations following the structure defined by the animations in `./style.css`.
 
 ### Configuration object 
 You can configure the slider using a configuration object, using the methods `AddYasToID()` and `AddYasToHTMLElement()` 
 ```js
 let slider=AddYasToID('slider_id',{
-    amountElements:2,
-    changeTime:5,
-    startEndAnimationTime:0.5,
+    amountElements:1,
+    changeTime:2,
+    startEndAnimationTime:0.8,
     initialAnimationDirection: 1,
     autoAnimation: true,
-    slowMovementOffset: "80px"
+    slowMovementOffset: "20deg",
+    animation:'rotation'
 })
 ```
 
