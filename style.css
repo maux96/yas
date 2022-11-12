@@ -4,17 +4,16 @@
     place-content: space-around;
 }
 .idle-animation{
-	animation: slider-idleanimation var(--animation-time) linear;
+	animation: var(--slider-idleanimation) var(--animation-time) linear;
 }
 .end-animation{
-    animation: slider-endanimation var(--end-animation-time) ease;
+    animation: var(--slider-endanimation) var(--end-animation-time) ease-in;
 }
 .start-animation{
-    animation: slider-startanimation var(--end-animation-time) ease;
+    animation: var(--slider-startanimation) var(--end-animation-time) ease-out;
 }
 
-@keyframes slider-idleanimation {
-    
+@keyframes slider-idleanimation-default {
     from{
         transform: translate( calc( var( --animation-offset ) * var( --animation-direction ) ) );
     }
@@ -22,7 +21,7 @@
         transform: translate( calc( -1 * var( --animation-offset ) * var( --animation-direction ) ) );
     }
 }
-@keyframes slider-endanimation {
+@keyframes slider-endanimation-default {
     from {
         transform: translate( calc( -1 * var( --animation-offset ) * var( --animation-direction ) ) );
     }
@@ -30,12 +29,71 @@
         transform: translate( calc( -100% * var( --animation-direction ) ) );  
     }
 }
-@keyframes slider-startanimation {
+@keyframes slider-startanimation-default {
     from {
         transform: translate( calc( 100% * var( --animation-direction ) ) );  
     }
     to {
         transform: translate( calc( var( --animation-offset ) * var( --animation-direction ) ) );
 
+    }
+}
+
+/* opacity animation */
+@keyframes slider-idleanimation-blur{
+}
+@keyframes slider-startanimation-blur{
+    from {
+        opacity:0;
+        --test-var:20px;
+        filter: blur(var(--test-var));
+    }
+    to {
+        opacity:1;
+        --test-var:0px;
+        filter: blur(var(--test-var));
+    }
+}
+@keyframes slider-endanimation-blur{
+from {
+        opacity:1;
+        --test-var:0px;
+        filter: blur(var(--test-var));
+    }
+    to {
+        opacity:0;
+        --test-var:20px;
+        filter: blur(var(--test-var));
+    }
+}
+
+
+/* rotate animation */
+@keyframes slider-idleanimation-rotation {
+    from{
+        transform: rotateZ( calc( 1 * var( --animation-offset ) * var( --animation-direction ) ) );
+    }
+    to{
+        transform: rotateZ( calc( -1 * var( --animation-offset ) * var( --animation-direction ) ) );
+    }
+}
+@keyframes slider-startanimation-rotation {
+    from {
+        transform: rotateZ(calc( 180deg * var( --animation-direction ) ));
+        opacity:0;
+    }
+    to {
+        transform: rotateZ( calc( 1 * var( --animation-offset ) * var( --animation-direction ) ) );
+        opacity:1;
+    }
+}
+@keyframes slider-endanimation-rotation {
+from {
+        transform: rotateZ( calc( -1 * var( --animation-offset ) * var( --animation-direction ) ) );
+        opacity:1;
+    }
+    to {
+        transform: rotateZ( calc( -180deg * var( --animation-direction ) ));
+        opacity:0;
     }
 }

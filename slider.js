@@ -18,7 +18,8 @@ class YaSlider {
         startEndAnimationTime: 0.5,
         initialAnimationDirection: 1,
         autoAnimation: true,
-        slowMovementOffset: "80px"
+        slowMovementOffset: "80px",
+        animation: "default"
     };
     constructor(node, config = undefined) {
         this._config = { ...this._config, ...config };
@@ -35,8 +36,9 @@ class YaSlider {
         node.appendChild(this._containerNode);
         // refreshing de css var values...
         this.SetSpeedValues(this._config.changeTime, this._config.startEndAnimationTime);
-        this.setAnimation(AnimationState.IdleAnimation);
+        this.setAnimationClass(AnimationState.IdleAnimation);
         this.setSlowMovementOffset(this._config.slowMovementOffset);
+        this.setSpecificAnimationCSS();
         this.BeginIdleAnimation();
         this._current = this._elements.length;
         this.Slide(this._config.initialAnimationDirection);
@@ -73,16 +75,16 @@ class YaSlider {
             return;
         this._containerNode.style.setProperty("--animation-direction", direction.toString());
         this._currentAnimationDirection = direction;
-        this.setAnimation(AnimationState.EndAnimation);
+        this.setAnimationClass(AnimationState.EndAnimation);
         await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
-        if (this._config.autoAnimation)
-            this.RestartIdleAnimation();
         this.NextElements(direction);
-        this.setAnimation(AnimationState.StartAnimation);
+        this.setAnimationClass(AnimationState.StartAnimation);
         //await  maybe we can set a wait time in the middle of the end-start 
         //of the animation :D
         await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
-        this.setAnimation(AnimationState.IdleAnimation);
+        if (this._config.autoAnimation)
+            this.RestartIdleAnimation();
+        this.setAnimationClass(AnimationState.IdleAnimation);
     }
     SlideRight() {
         this.Slide(1);
@@ -124,12 +126,17 @@ class YaSlider {
     setSlowMovementOffset(offset) {
         this._containerNode.style.setProperty("--animation-offset", offset);
     }
-    SetSpecificAnimation() {
-        /* Set a specific animation.  */
-        throw "NotImplemented!";
+    SetSpecificAnimation(animationName) {
+        this._config.animation = animationName;
+        this.setSpecificAnimationCSS();
         return this;
     }
-    setAnimation(animation) {
+    setSpecificAnimationCSS() {
+        this._containerNode.style.setProperty("--slider-idleanimation", "slider-idleanimation-" + this._config.animation);
+        this._containerNode.style.setProperty("--slider-startanimation", "slider-startanimation-" + this._config.animation);
+        this._containerNode.style.setProperty("--slider-endanimation", "slider-endanimation-" + this._config.animation);
+    }
+    setAnimationClass(animation) {
         if (!this._containerNode.classList.replace(this._currentAnimation, animation)) {
             this._containerNode.classList.add(animation);
         }

@@ -24,7 +24,8 @@ class YaSlider {
         startEndAnimationTime:0.5,
         initialAnimationDirection: 1,
         autoAnimation: true,
-        slowMovementOffset: "80px"
+        slowMovementOffset: "80px",
+        animation: "default"
     }; 
 
     public constructor(
@@ -50,10 +51,10 @@ class YaSlider {
 
         // refreshing de css var values...
         this.SetSpeedValues(
-            this._config.changeTime,this._config.startEndAnimationTime
-        );
-        this.setAnimation(AnimationState.IdleAnimation);
+            this._config.changeTime,this._config.startEndAnimationTime);
+        this.setAnimationClass(AnimationState.IdleAnimation);
         this.setSlowMovementOffset(this._config.slowMovementOffset);
+        this.setSpecificAnimationCSS();
 
         this.BeginIdleAnimation();
         this._current=this._elements.length;
@@ -109,20 +110,20 @@ class YaSlider {
         );
 
         this._currentAnimationDirection=direction;
-        this.setAnimation(AnimationState.EndAnimation);
+        this.setAnimationClass(AnimationState.EndAnimation);
         await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
         
-        if(this._config.autoAnimation)
-            this.RestartIdleAnimation();
         this.NextElements(direction);
-        this.setAnimation(AnimationState.StartAnimation);
+        this.setAnimationClass(AnimationState.StartAnimation);
 
         //await  maybe we can set a wait time in the middle of the end-start 
         //of the animation :D
 
         await YaSlider.waitForSeconds(this._config.startEndAnimationTime);
 
-        this.setAnimation(AnimationState.IdleAnimation);
+        if(this._config.autoAnimation)
+            this.RestartIdleAnimation();
+        this.setAnimationClass(AnimationState.IdleAnimation);
     }
 
     public SlideRight(){
@@ -136,11 +137,9 @@ class YaSlider {
         this._config.changeTime = changeTime;
         this._config.startEndAnimationTime = startEndAnimationTime;
         this._containerNode.style.setProperty(
-            "--animation-time",changeTime.toString()+'s'
-        );
+            "--animation-time",changeTime.toString()+'s');
         this._containerNode.style.setProperty(
-            "--end-animation-time",startEndAnimationTime.toString()+'s'
-        );
+            "--end-animation-time",startEndAnimationTime.toString()+'s');
 
         return this;
     }
@@ -174,13 +173,24 @@ class YaSlider {
     }
 
 
-    public SetSpecificAnimation(){
-    /* Set a specific animation.  */
-        throw "NotImplemented!";
+    public SetSpecificAnimation(animationName:string){
+        this._config.animation=animationName;
+        this.setSpecificAnimationCSS();
         return this;
     }
+    public setSpecificAnimationCSS(){
+        this._containerNode.style.setProperty(
+            "--slider-idleanimation",
+            "slider-idleanimation-"+this._config.animation);
+        this._containerNode.style.setProperty(
+            "--slider-startanimation",
+            "slider-startanimation-"+this._config.animation);
+        this._containerNode.style.setProperty(
+            "--slider-endanimation",
+            "slider-endanimation-"+this._config.animation);
+    }
 
-    private setAnimation(animation: AnimationState){
+    private setAnimationClass(animation: AnimationState){
         if (!this._containerNode.classList.replace(
                 this._currentAnimation,animation
         )){ this._containerNode.classList.add(animation); }

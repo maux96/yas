@@ -5,7 +5,8 @@ export interface YasConfig{
     initialAnimationDirection: 1 | -1,
     amountElements: number,
     autoAnimation: boolean,
-    slowMovementOffset: string
+    slowMovementOffset: string,
+    animation: string
 }
 export interface YasConfigChanger {
     changeTime?: number,
@@ -13,6 +14,7 @@ export interface YasConfigChanger {
     initialAnimationDirection?: 1 | -1,
     amountElements?: number,
     autoAnimation?: boolean,
-    slowMovementOffset?: string
+    slowMovementOffset?: string,
+    animation?: string
 }
 
