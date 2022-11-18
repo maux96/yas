@@ -10,9 +10,12 @@ The center idea is that the slider will be inserted in a `HTMLElement` node sele
 ### Without a package manager
 You can download the project in the workspace and:
 ```html
+<!-- Import the styles needed. -->
 <link rel="stylesheet" href="yas/style.css">
 
+<!-- mark the node where the slider will be with an id -->
 <div id="slider_id">
+    <!-- Every child will be a slider item. -->
     <div> first child </div>
     <div> second child </div>
     <div> 
@@ -20,13 +23,14 @@ You can download the project in the workspace and:
         <img src="./testImg.jpg" /> 
     </div>
 </div>
+<!-- Slide manually -->
 <button onclick="mySlider.SlideLeft()">Prev</button>
 <button onclick="mySlider.SlideRight()">Next</button>
-
 
 <script type="module">
     import { AddYasToID } from './yas/slider.js'
 
+    // Create the slider in the HTMLElement with `slider_id` as id
     window.mySlider = AddYasToID('slider_id');
 </script>
 ``` 
@@ -83,6 +87,8 @@ You can _join_ the configurations chaining the methods when you create the slide
   `SetSlowMovementOffset(offset)` | Sets the distance traveled by the elements after make a change, Ej: `'100px'`. 
   `RemoveAutoAnimation()` | Remove auto change. 
   `SetSpecificAnimation(animation)` | Sets a different animation.
+  `SetAnimationToEveryItem(ok)` | Sets individual animation for every item. 
+  `ShouldMove(ok)` | ShouldMove?
 
   We create some defaults animations like:
   `default`, `opacity`, `up-down`,`blur` and `rotation`, but the user can create their own animations following the structure defined by the animations in `./style.css`.
@@ -98,6 +104,7 @@ let slider=AddYasToID('slider_id',{
     autoAnimation: true,
     slowMovementOffset: "20deg",
     animation:'rotation'
+    animEveryItem: false 
 })
 ```
 
