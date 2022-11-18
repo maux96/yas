@@ -25,7 +25,8 @@ class YaSlider {
         initialAnimationDirection: 1,
         autoAnimation: true,
         slowMovementOffset: "80px",
-        animation: "default"
+        animation: "default",
+        animEveryItem: false 
     }; 
 
     public constructor(
@@ -61,13 +62,15 @@ class YaSlider {
         this.Slide(this._config.initialAnimationDirection)
     }
 
-    public BeginIdleAnimation(){
+    private BeginIdleAnimation(){
         let self: YaSlider = this;
 
         self._config.autoAnimation=true;
         this._intervalAnimationId = setInterval(function(){
             self.Slide(self._currentAnimationDirection);
         }, this._config.changeTime*1000);
+
+        this.setSlowMovementOffset(this._config.slowMovementOffset);
     }
     private RestartIdleAnimation(){
         clearInterval(this._intervalAnimationId);
@@ -157,10 +160,17 @@ class YaSlider {
         if(this._config.autoAnimation)
             this.RemoveAutoAnimation();
         else{ 
-            this.setSlowMovementOffset(this._config.slowMovementOffset);
             this.Slide(this._currentAnimationDirection);
             this.BeginIdleAnimation();
         }
+    }
+    public ShouldMove(ok:boolean) {
+        if(!ok){
+            this.RemoveAutoAnimation();
+        }else{
+            this.RestartIdleAnimation();
+        }
+        return this;
     }
 
     public SetSlowMovementOffset(offset: string){
@@ -190,13 +200,47 @@ class YaSlider {
             "slider-endanimation-"+this._config.animation);
     }
 
-    private setAnimationClass(animation: AnimationState){
-        if (!this._containerNode.classList.replace(
+
+    public SetAnimationToEveryItem(ok: boolean){
+       if(ok){
+            this.removeAllAnimations(this._containerNode);
+       } else {
+            this._elements.forEach(
+                (item)=>this.removeAllAnimations(item as HTMLElement))
+       }
+       this._config.animEveryItem = ok;
+       return this;
+    }
+
+    private setAnimationClassToNode(node: HTMLElement,animation: AnimationState){
+        if (!node.classList.replace(
                 this._currentAnimation,animation
-        )){ this._containerNode.classList.add(animation); }
-        
+        )){ node.classList.add(animation); }
+    }
+
+    private removeAllAnimations(node: HTMLElement){
+        node.classList.remove(AnimationState.EndAnimation,
+                                             AnimationState.StartAnimation,
+                                             AnimationState.IdleAnimation) 
+    }
+
+    private setAnimationClassToItems(animation: AnimationState){
+        for( let i=0;i< this._currentElements.length;i++){
+            this.setAnimationClassToNode(this._currentElements[i] as HTMLElement,
+                                   animation);
+        }
+    }
+
+    private setAnimationClass(animation: AnimationState){
+        if(this._config.animEveryItem){
+            this.setAnimationClassToItems(animation);
+        } else {
+            this.setAnimationClassToNode(this._containerNode, animation);
+        }
+
         this._currentAnimation = animation;
     }
+
 
 
     private static waitForSeconds(seconds: number){

@@ -19,7 +19,8 @@ class YaSlider {
         initialAnimationDirection: 1,
         autoAnimation: true,
         slowMovementOffset: "80px",
-        animation: "default"
+        animation: "default",
+        animEveryItem: false
     };
     constructor(node, config = undefined) {
         this._config = { ...this._config, ...config };
@@ -49,6 +50,7 @@ class YaSlider {
         this._intervalAnimationId = setInterval(function () {
             self.Slide(self._currentAnimationDirection);
         }, this._config.changeTime * 1000);
+        this.setSlowMovementOffset(this._config.slowMovementOffset);
     }
     RestartIdleAnimation() {
         clearInterval(this._intervalAnimationId);
@@ -113,10 +115,18 @@ class YaSlider {
         if (this._config.autoAnimation)
             this.RemoveAutoAnimation();
         else {
-            this.setSlowMovementOffset(this._config.slowMovementOffset);
             this.Slide(this._currentAnimationDirection);
             this.BeginIdleAnimation();
         }
+    }
+    ShouldMove(ok) {
+        if (!ok) {
+            this.RemoveAutoAnimation();
+        }
+        else {
+            this.RestartIdleAnimation();
+        }
+        return this;
     }
     SetSlowMovementOffset(offset) {
         this._config.slowMovementOffset = offset;
@@ -136,9 +146,35 @@ class YaSlider {
         this._containerNode.style.setProperty("--slider-startanimation", "slider-startanimation-" + this._config.animation);
         this._containerNode.style.setProperty("--slider-endanimation", "slider-endanimation-" + this._config.animation);
     }
+    SetAnimationToEveryItem(ok) {
+        if (ok) {
+            this.removeAllAnimations(this._containerNode);
+        }
+        else {
+            this._elements.forEach((item) => this.removeAllAnimations(item));
+        }
+        this._config.animEveryItem = ok;
+        return this;
+    }
+    setAnimationClassToNode(node, animation) {
+        if (!node.classList.replace(this._currentAnimation, animation)) {
+            node.classList.add(animation);
+        }
+    }
+    removeAllAnimations(node) {
+        node.classList.remove(AnimationState.EndAnimation, AnimationState.StartAnimation, AnimationState.IdleAnimation);
+    }
+    setAnimationClassToItems(animation) {
+        for (let i = 0; i < this._currentElements.length; i++) {
+            this.setAnimationClassToNode(this._currentElements[i], animation);
+        }
+    }
     setAnimationClass(animation) {
-        if (!this._containerNode.classList.replace(this._currentAnimation, animation)) {
-            this._containerNode.classList.add(animation);
+        if (this._config.animEveryItem) {
+            this.setAnimationClassToItems(animation);
+        }
+        else {
+            this.setAnimationClassToNode(this._containerNode, animation);
         }
         this._currentAnimation = animation;
     }

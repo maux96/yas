@@ -6,7 +6,8 @@ export interface YasConfig{
     amountElements: number,
     autoAnimation: boolean,
     slowMovementOffset: string,
-    animation: string
+    animation: string,
+    animEveryItem: boolean
 }
 export interface YasConfigChanger {
     changeTime?: number,
@@ -15,6 +16,7 @@ export interface YasConfigChanger {
     amountElements?: number,
     autoAnimation?: boolean,
     slowMovementOffset?: string,
-    animation?: string
+    animation?: string,
+    animEveryItem?: boolean
 }
 
