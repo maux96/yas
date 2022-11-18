@@ -103,7 +103,7 @@ let slider=AddYasToID('slider_id',{
     initialAnimationDirection: 1,
     autoAnimation: true,
     slowMovementOffset: "20deg",
-    animation:'rotation'
+    animation:'rotation',
     animEveryItem: false 
 })
 ```
