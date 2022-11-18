@@ -1,6 +1,6 @@
 # Yet Another Slider (yas)
 
-Very simple slider written in TypeScript, easy to set up, it can have HTMLElements as items.
+Very simple slider written in TypeScript, easy to set up. [Here](https://maux96.github.io/yas/) some examples.
 
 ---
 ## Use 
