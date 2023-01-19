@@ -85,10 +85,10 @@ You can _join_ the configurations chaining the methods when you create the slide
   `SetSpeedValues(changeTime, endTime)`  | Sets the animation time, `changeTime` is the delay in seconds waited for change, and `endTime` is  the delay of the change animation.
   `SetAmountOfElements(amount)` |   Sets the number of items displayed at once.
   `SetSlowMovementOffset(offset)` | Sets the distance traveled by the elements after make a change, Ej: `'100px'`. 
-  `RemoveAutoAnimation()` | Remove auto change. 
+  `SetAutoAnimationOff()` | Remove auto change. 
   `SetSpecificAnimation(animation)` | Sets a different animation.
   `SetAnimationToEveryItem(ok)` | Sets individual animation for every item. 
-  `ShouldMove(ok)` | ShouldMove?
+  `SetAutoAnimation(ok)` | ShouldAutoMove?
 
   We create some defaults animations like:
   `default`, `opacity`, `up-down`,`blur` and `rotation`, but the user can create their own animations following the structure defined by the animations in `./style.css`.

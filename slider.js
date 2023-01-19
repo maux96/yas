@@ -40,7 +40,9 @@ class YaSlider {
         this.setAnimationClass(AnimationState.IdleAnimation);
         this.setSlowMovementOffset(this._config.slowMovementOffset);
         this.setSpecificAnimationCSS();
-        this.BeginIdleAnimation();
+        if (this._config.autoAnimation) {
+            this.BeginIdleAnimation();
+        }
         this._current = this._elements.length;
         this.Slide(this._config.initialAnimationDirection);
     }
@@ -105,7 +107,7 @@ class YaSlider {
         this._config.amountElements = amount;
         return this;
     }
-    RemoveAutoAnimation() {
+    SetAutoAnimationOff() {
         clearInterval(this._intervalAnimationId);
         this.setSlowMovementOffset("0px");
         this._config.autoAnimation = false;
@@ -113,15 +115,15 @@ class YaSlider {
     }
     ToogleAutoAnimation() {
         if (this._config.autoAnimation)
-            this.RemoveAutoAnimation();
+            this.SetAutoAnimationOff();
         else {
             this.Slide(this._currentAnimationDirection);
             this.BeginIdleAnimation();
         }
     }
-    ShouldMove(ok) {
+    SetAutoAnimation(ok) {
         if (!ok) {
-            this.RemoveAutoAnimation();
+            this.SetAutoAnimationOff();
         }
         else {
             this.RestartIdleAnimation();

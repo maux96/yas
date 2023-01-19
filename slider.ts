@@ -1,5 +1,5 @@
 
-import type { YasConfig, YasConfigChanger } from './types'
+import type { YasConfig } from './types'
 
 export enum AnimationState {
     IdleAnimation="idle-animation",
@@ -28,10 +28,10 @@ class YaSlider {
         animation: "default",
         animEveryItem: false 
     }; 
-
+    
     public constructor(
         node: HTMLElement,
-        config: YasConfigChanger | undefined = undefined
+        config: Partial<YasConfig> | undefined = undefined
     ){
 
         this._config = {...this._config, ...config};
@@ -57,7 +57,9 @@ class YaSlider {
         this.setSlowMovementOffset(this._config.slowMovementOffset);
         this.setSpecificAnimationCSS();
 
-        this.BeginIdleAnimation();
+        if(this._config.autoAnimation){
+            this.BeginIdleAnimation();
+        }
         this._current=this._elements.length;
         this.Slide(this._config.initialAnimationDirection)
     }
@@ -150,7 +152,7 @@ class YaSlider {
         this._config.amountElements=amount;
         return this; 
     }
-    public RemoveAutoAnimation(){
+    public SetAutoAnimationOff(){
         clearInterval(this._intervalAnimationId)
         this.setSlowMovementOffset("0px")
         this._config.autoAnimation = false;
@@ -158,15 +160,15 @@ class YaSlider {
     }
     public ToogleAutoAnimation(){
         if(this._config.autoAnimation)
-            this.RemoveAutoAnimation();
+            this.SetAutoAnimationOff();
         else{ 
             this.Slide(this._currentAnimationDirection);
             this.BeginIdleAnimation();
         }
     }
-    public ShouldMove(ok:boolean) {
+    public SetAutoAnimation (ok:boolean) {
         if(!ok){
-            this.RemoveAutoAnimation();
+            this.SetAutoAnimationOff();
         }else{
             this.RestartIdleAnimation();
         }
@@ -188,7 +190,7 @@ class YaSlider {
         this.setSpecificAnimationCSS();
         return this;
     }
-    public setSpecificAnimationCSS(){
+    private setSpecificAnimationCSS(){
         this._containerNode.style.setProperty(
             "--slider-idleanimation",
             "slider-idleanimation-"+this._config.animation);
@@ -252,7 +254,7 @@ class YaSlider {
 
 const AddYasToID = (
     id: string,
-    config: YasConfigChanger | undefined = undefined
+    config: Partial<YasConfig> | undefined = undefined
 ):YaSlider | null => {
 
     const node = document.getElementById(id);
@@ -265,7 +267,7 @@ const AddYasToID = (
 
 const AddYasToHTMLElement = (
     node: HTMLElement,
-    config: YasConfigChanger | undefined = undefined
+    config: Partial<YasConfig> | undefined = undefined
 ):YaSlider => new YaSlider(node, config);
 
 
